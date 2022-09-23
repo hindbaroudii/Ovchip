@@ -10,6 +10,7 @@ public class Reiziger {
     private String tussenvoegsel;
     private String achternaam;
     private Date geboortedatum;
+    private Adres adres;
 
     public Reiziger() {
     }
@@ -62,12 +63,21 @@ public class Reiziger {
         this.geboortedatum = geboortedatum;
     }
 
+    public Adres getAdres() {
+        return adres;
+    }
+
+    public void setAdres(Adres adres) {
+        this.adres = adres;
+    }
+
     @Override
     public String toString() {
-        return "Reiziger" + id +
-                ", voorletters=" + voorletters + '\'' +
-                ", tussenvoegsel='" + tussenvoegsel + '\'' +
-                ", achternaam='" + achternaam + '\'' +
-                ", geboortedatum=" + geboortedatum;
+        return "Reiziger {#" + id +
+                " " + voorletters + '.' +
+                " " + tussenvoegsel +
+                " " + achternaam +
+                "geb. " + geboortedatum +
+                "," + adres + " }";
     }
 }

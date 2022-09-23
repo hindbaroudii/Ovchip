@@ -28,7 +28,6 @@ public class ReizigerDAOPsql implements ReizigerDAO {
             st = conn.createStatement();
             String query = "INSERT INTO reiziger(reiziger_id, voorletters,tussenvoegsel,achternaam,geboortedatum) " +
                     "VALUES (?,?,?,?,?)";
-            rs = st.executeQuery(query);
 
             PreparedStatement pst = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             pst.setString(1, String.valueOf(reiziger.getId()));
@@ -37,12 +36,16 @@ public class ReizigerDAOPsql implements ReizigerDAO {
             pst.setString(4, reiziger.getAchternaam());
             pst.setString(5, String.valueOf(reiziger.getGeboortedatum()));
 
+            rs = st.executeQuery(query);
+
             reizigers.add(reiziger);
-            System.out.println(reiziger);
+
 
             return true;
+        }else {
+            return false;
         }
-        return false;
+
     }
 
     @Override
@@ -123,10 +126,19 @@ public class ReizigerDAOPsql implements ReizigerDAO {
 
     @Override
     public List<Reiziger> findAll() throws SQLException{
-            st = conn.createStatement();
-            String query = "SELECT * FROM reiziger";
-            rs = st.executeQuery(query);
-            System.out.println(rs);
+        st = conn.createStatement();
+        String query = "SELECT * FROM reiziger";
+        rs = st.executeQuery(query);
+
+        while (rs.next()){
+            Reiziger reiziger = new Reiziger();
+            reiziger.setId(Integer.parseInt(rs.getString("reiziger_id")));
+            reiziger.setVoorletters(rs.getString("voorletters"));
+            reiziger.setTussenvoegsel(rs.getString("tussenvoegsel"));
+            reiziger.setAchternaam(rs.getString("achternaam"));
+            reiziger.setGeboortedatum(Date.valueOf(rs.getString("geboortedatum")));
+            reizigers.add(reiziger);
+        }
 
         return reizigers;
     }
