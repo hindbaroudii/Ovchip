@@ -102,5 +102,10 @@ public class OVChipkaartDAOPsql implements OVChipkaartDAO {
         return null;
     }
 
+    @Override
+    public List<OVChipkaart> findAll() {
+        return null;
+    }
+
 }
 
