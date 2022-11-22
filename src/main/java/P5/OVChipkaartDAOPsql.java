@@ -6,9 +6,18 @@ import java.util.List;
 
 public class OVChipkaartDAOPsql implements OVChipkaartDAO {
     private Connection conn;
+    private ProductDAOPsql productDAOPsql;
 
     public OVChipkaartDAOPsql(Connection conn) {
-        this.conn = conn;
+        try {
+            final String url = "jdbc:postgresql://localhost/ovchip";
+            final String user = "postgres";
+            final String password = "zxcv";
+            this.conn = DriverManager.getConnection(url, user, password);
+            System.out.println("Connected to the PostgreSQL server successfully.");
+        }catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
     }
 
 
@@ -104,7 +113,31 @@ public class OVChipkaartDAOPsql implements OVChipkaartDAO {
 
     @Override
     public List<OVChipkaart> findAll() {
-        return null;
+        List<OVChipkaart> ovChipkaartList = new ArrayList<>();
+        try{
+            String query = "SELECT * FROM ov_chipkaart";
+            PreparedStatement pst = conn.prepareStatement(query);
+            ResultSet rs = pst.executeQuery();
+            while (rs.next()){
+                int kaartnummer = rs.getInt("kaart_nummer");
+                Date geldigheid = rs.getDate("geldig_tot");
+                int klasse = rs.getInt("klasse");
+                double saldo = rs.getDouble("saldo");
+                int reizigerID =  rs.getInt("reiziger_id");
+
+                OVChipkaart ovChipkaart = new OVChipkaart(kaartnummer,geldigheid,klasse
+                ,saldo,reizigerID);
+
+                ovChipkaart.setProductList(productDAOPsql.findByOVChipkaart(ovChipkaart));
+
+                ovChipkaartList.add(ovChipkaart);
+            }
+            return ovChipkaartList;
+
+        }catch (SQLException sqlException){
+            System.out.println("Error !  "+ sqlException.getMessage());
+            return null;
+        }
     }
 
 }

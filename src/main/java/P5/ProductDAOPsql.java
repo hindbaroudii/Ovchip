@@ -11,7 +11,15 @@ public class ProductDAOPsql implements ProductDAO {
     private OVChipkaartDAOPsql  odao = null;
 
     public ProductDAOPsql(Connection conn, OVChipkaartDAOPsql odao) {
-        this.conn = conn;
+        try {
+            final String url = "jdbc:postgresql://localhost/ovchip";
+            final String user = "postgres";
+            final String password = "zxcv";
+            this.conn = DriverManager.getConnection(url, user, password);
+            System.out.println("Connected to the PostgreSQL server successfully.");
+        }catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
         this.odao = new OVChipkaartDAOPsql(conn);
     }
 

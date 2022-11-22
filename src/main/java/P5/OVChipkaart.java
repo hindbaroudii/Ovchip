@@ -1,6 +1,8 @@
 package P5;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 public class OVChipkaart {
     private int kaartnummer;
@@ -8,6 +10,7 @@ public class OVChipkaart {
     private int klasse;
     private double saldo;
     private int reiziger_id;
+    private List<Product> productList = new ArrayList<>();
 
     public OVChipkaart(int kaartnummer, Date geldigTot, int klasse, double saldo, int reiziger_id) {
         this.kaartnummer = kaartnummer;
@@ -55,6 +58,14 @@ public class OVChipkaart {
 
     public void setReiziger_id(int reiziger_id) {
         this.reiziger_id = reiziger_id;
+    }
+
+    public List<Product> getProductList() {
+        return productList;
+    }
+
+    public void setProductList(List<Product> productList) {
+        this.productList = productList;
     }
 
     @Override
