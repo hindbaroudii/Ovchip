@@ -1,18 +1,23 @@
 package P4;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class AdresDAOPsql implements AdresDAO {
-    private Connection conn = Main.getConnection();
+    private Connection conn;
     private ReizigerDAO rdao;
 
     public AdresDAOPsql(Connection conn) {
-        this.conn = conn;
+        try {
+            final String url = "jdbc:postgresql://localhost/ovchip";
+            final String user = "postgres";
+            final String password = "zxcv";
+            this.conn = DriverManager.getConnection(url, user, password);
+            System.out.println("Connected to the PostgreSQL server successfully.");
+        }catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
     }
 
     @Override

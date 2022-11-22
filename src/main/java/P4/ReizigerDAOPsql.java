@@ -1,7 +1,5 @@
 package P4;
 
-import P2.Reiziger;
-import P2.ReizigerDAO;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -15,7 +13,15 @@ public class ReizigerDAOPsql implements ReizigerDAO {
     private List<Reiziger> reizigers = new ArrayList<>();
 
     public ReizigerDAOPsql(Connection conn) {
-        this.conn =  conn;
+        try {
+            final String url = "jdbc:postgresql://localhost/ovchip";
+            final String user = "postgres";
+            final String password = "zxcv";
+            this.conn = DriverManager.getConnection(url, user, password);
+            System.out.println("Connected to the PostgreSQL server successfully.");
+        }catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
     }
 
 
