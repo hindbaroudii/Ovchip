@@ -1,14 +1,15 @@
-import model.*;
+package P5;
 
-import java.sql.*;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.List;
 
 public class Main {
-
     private static Connection connection;
 
-
-    private Connection getConnection() {
+    public static Connection getConnection() {
         try{
             final String url = "jdbc:postgresql://localhost/ovchip";
             final String user = "postgres";
@@ -22,6 +23,8 @@ public class Main {
         }
         return connection;
     }
+
+
 
     private Connection closeConnection() {
         try {
@@ -48,33 +51,17 @@ public class Main {
         // Maak een nieuwe reiziger aan en persisteer deze in de database
 //        String gbdatum = "1981-03-14";
 //        Reiziger sietske = new Reiziger(77, "S", "", "Boers", java.sql.Date.valueOf(gbdatum));
+//        System.out.println("sietske is verwijderd!");
 //        System.out.print("[Test] Eerst " + reizigers.size() + " reizigers, na ReizigerDAO.save() ");
 //        rdao.save(sietske);
 //        reizigers = rdao.findAll();
 //        System.out.println(reizigers.size() + " reizigers\n");
 
-        // Voeg aanvullende tests van de ontbrekende CRUD-operaties in.
-    }
-
-    private static void testAdresDAO(AdresDAO adao) throws SQLException {
-        System.out.println("\n---------- Test AdresDAO -------------");
-
-        List<Adres> adresList = adao.findAll();
-        System.out.println("[Test] AdresDAO.findAll() geeft de volgende adressen:");
-        for (Adres a : adresList) {
-            System.out.println(a);
-        }
-        System.out.println();
-
     }
 
     public static void main (String [] args) throws SQLException{
         Main main = new Main();
-        ReizigerDAO rDao = new ReizigerDAOPsql(connection);
-        AdresDAO aDao = new AdresDAOPsql(connection);
-        main.getConnection();
-        Main.testReizigerDAO(rDao);
-        Main.testAdresDAO(aDao);
-    }
 
+
+    }
 }

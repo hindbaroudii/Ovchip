@@ -1,4 +1,7 @@
-package model;
+package P5;
+
+import P2.Reiziger;
+import P2.ReizigerDAO;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -12,40 +15,29 @@ public class ReizigerDAOPsql implements ReizigerDAO {
     private List<Reiziger> reizigers = new ArrayList<>();
 
     public ReizigerDAOPsql(Connection conn) {
-        try {
-            final String url = "jdbc:postgresql://localhost/ovchip";
-            final String user = "postgres";
-            final String password = "zxcv";
-            this.conn = DriverManager.getConnection(url, user, password);
-            System.out.println("Connected to the PostgreSQL server successfully.");
-        }catch (SQLException e){
-            System.out.println(e.getMessage());
-        }
+        this.conn =  conn;
     }
 
-    public boolean save(Reiziger reiziger) throws SQLException{
+
+    @Override
+    public boolean save(Reiziger reiziger) throws SQLException {
         if (!reizigers.contains(reiziger)) {
-            st = conn.createStatement();
+
             String query = "INSERT INTO reiziger(reiziger_id, voorletters,tussenvoegsel,achternaam,geboortedatum) " +
                     "VALUES (?,?,?,?,?)";
 
-            PreparedStatement pst = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-            pst.setString(1, String.valueOf(reiziger.getId()));
+            PreparedStatement pst = conn.prepareStatement(query);
+            pst.setInt(1, reiziger.getId());
             pst.setString(2, reiziger.getVoorletters());
             pst.setString(3, reiziger.getTussenvoegsel());
             pst.setString(4, reiziger.getAchternaam());
-            pst.setString(5, String.valueOf(reiziger.getGeboortedatum()));
+            pst.setDate(5, reiziger.getGeboortedatum());
 
-            rs = st.executeQuery(query);
-
-            reizigers.add(reiziger);
-
-
-            return true;
+            return pst.execute();
         }else {
-            return false;
+            System.out.println("\nReiziger met id: "+ reiziger.getId() + "bestaat al");
         }
-
+        return false;
     }
 
     @Override
@@ -69,8 +61,8 @@ public class ReizigerDAOPsql implements ReizigerDAO {
         }
     }
 
-
-    public boolean delete(Reiziger reiziger) throws SQLException{
+    @Override
+    public boolean delete(Reiziger reiziger) throws SQLException {
         if(reizigers.contains(reiziger)){
 
             st = conn.createStatement();
@@ -90,22 +82,27 @@ public class ReizigerDAOPsql implements ReizigerDAO {
     }
 
     @Override
-    public Reiziger findById(int id) throws SQLException{
+    public Reiziger findById(int id) throws SQLException {
         for(Reiziger reiziger : reizigers){
             if(reiziger.getId() == id){
-                st = conn.createStatement();
-
                 String query = "SELECT * FROM reiziger WHERE reiziger_id = ? ";
 
-                PreparedStatement pst = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-                pst.setString(1,String.valueOf(reiziger.getId()));
+                PreparedStatement pst = conn.prepareStatement(query);
+                pst.setInt(1,reiziger.getId());
 
                 rs = st.executeQuery(query);
+                rs.next();
 
-                System.out.println(reiziger);
+                int reiziger_id = rs.getInt("reiziger_id");
+                String voorletters = rs.getString("voorletters");
+                String tussenvoegsel = rs.getString("tussenvoegsel");
+                String achternaam = rs.getString("achternaam");
+                Date gbdatum = rs.getDate("geboortedatum");
+
+                return new Reiziger(reiziger_id,voorletters,tussenvoegsel,achternaam,gbdatum);
             }
         }
-        return new Reiziger();
+        return null;
     }
 
     @Override
@@ -125,7 +122,7 @@ public class ReizigerDAOPsql implements ReizigerDAO {
     }
 
     @Override
-    public List<Reiziger> findAll() throws SQLException{
+    public List<Reiziger> findAll() throws SQLException {
         st = conn.createStatement();
         String query = "SELECT * FROM reiziger";
         rs = st.executeQuery(query);
@@ -142,6 +139,4 @@ public class ReizigerDAOPsql implements ReizigerDAO {
 
         return reizigers;
     }
-
-
 }

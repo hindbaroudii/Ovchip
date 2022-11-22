@@ -1,4 +1,4 @@
-package model;
+package P5;
 
 public class Adres {
     private int id;
@@ -7,6 +7,15 @@ public class Adres {
     private String straat;
     private String woonplaats;
     private int reizigerID;
+
+    public Adres(int id, String postcode, String huisnummer, String straat, String woonplaats, int reizigerID) {
+        this.id = id;
+        this.postcode = postcode;
+        this.huisnummer = huisnummer;
+        this.straat = straat;
+        this.woonplaats = woonplaats;
+        this.reizigerID = reizigerID;
+    }
 
     public int getID() {
         return id;
@@ -53,16 +62,17 @@ public class Adres {
     }
 
     public void setReizigerID(int reizigerID) {
-        Reiziger reiziger = new Reiziger();
-        this.reizigerID = reiziger.getId();
+        this.reizigerID = reizigerID;
     }
 
     @Override
     public String toString() {
-        return "Adres {" +
-                "#" + id +
-                " " + postcode +
-                "-" + huisnummer + " }";
+        return "Adres:" +
+                "id = " + id +
+                ", postcode = '" + postcode + '\'' +
+                ", huisnummer = '" + huisnummer + '\'' +
+                ", straat = '" + straat + '\'' +
+                ", woonplaasts = '" + woonplaats + '\'' +
+                ", reizigerId = '" + reizigerID ;
     }
 }
-
