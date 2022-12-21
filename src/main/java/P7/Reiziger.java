@@ -1,81 +1,48 @@
 package P7;
 
-
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
-@Table(name = "reiziger")
+
+@Entity (name = "Reiziger")
+@Table (name = "reiziger")
 public class Reiziger {
 
     @Id
-    private int reiziger_id;
+    @Column(name = "reiziger_id")
+    private int reizigerid;
 
-    @Column
     private String voorletters;
     private String tussenvoegsel;
     private String achternaam;
     private Date geboortedatum;
 
-    @OneToOne
-    @JoinColumn(name = "reiziger_id")
+    @OneToOne(mappedBy = "reiziger", cascade = CascadeType.ALL, orphanRemoval = true)
     private Adres adres;
 
-    @OneToMany
-    @JoinColumn(name = "reiziger_id")
-    private List<OVChipkaart> ovChipkaartList = new ArrayList<>();
+    @OneToMany(mappedBy = "reiziger")
+    private List<OVChipkaart> ovChipkaarten = new ArrayList<>();
+
 
     public Reiziger() {
     }
 
-    public Reiziger(int reiziger_id, String voorletters, String tussenvoegsel, String achternaam, Date geboortedatum) {
-        this.reiziger_id = reiziger_id;
+    public Reiziger(int id, String voorletters, String tussenvoegsel, String achternaam, Date geboortedatum) {
+        this.reizigerid = id;
         this.voorletters = voorletters;
         this.tussenvoegsel = tussenvoegsel;
         this.achternaam = achternaam;
         this.geboortedatum = geboortedatum;
     }
 
-    public int getReiziger_id() {
-        return reiziger_id;
+    public List<OVChipkaart> getovChipkaarten() {
+        return ovChipkaarten;
     }
 
-    public void setReiziger_id(int reiziger_id) {
-        this.reiziger_id = reiziger_id;
-    }
-
-    public String getVoorletters() {
-        return voorletters;
-    }
-
-    public void setVoorletters(String voorletters) {
-        this.voorletters = voorletters;
-    }
-
-    public String getTussenvoegsel() {
-        return tussenvoegsel;
-    }
-
-    public void setTussenvoegsel(String tussenvoegsel) {
-        this.tussenvoegsel = tussenvoegsel;
-    }
-
-    public String getAchternaam() {
-        return achternaam;
-    }
-
-    public void setAchternaam(String achternaam) {
-        this.achternaam = achternaam;
-    }
-
-    public Date getGeboortedatum() {
-        return geboortedatum;
-    }
-
-    public void setGeboortedatum(Date geboortedatum) {
-        this.geboortedatum = geboortedatum;
+    public void getovChipkaarten(List<OVChipkaart> kaarten) {
+        this.ovChipkaarten = ovChipkaarten;
     }
 
     public Adres getAdres() {
@@ -86,24 +53,57 @@ public class Reiziger {
         this.adres = adres;
     }
 
-    public List<OVChipkaart> getOvChipkaartList() {
-        return ovChipkaartList;
+    public Date getGeboortedatum() {
+        return geboortedatum;
     }
 
-    public void setOvChipkaartList(List<OVChipkaart> ovChipkaartList) {
-        this.ovChipkaartList = ovChipkaartList;
+    public void setGeboortedatum(Date geboortedatum) {
+        this.geboortedatum = geboortedatum;
     }
+
+    public int getReizigerid() {
+        return reizigerid;
+    }
+
+    public void setReizigerid(int reizigerid) {
+        this.reizigerid = reizigerid;
+    }
+
+    public String getAchternaam() {
+        return achternaam;
+    }
+
+    public void setAchternaam(String achternaam) {
+        this.achternaam = achternaam;
+    }
+
+    public String getTussenvoegsel() {
+        return tussenvoegsel;
+    }
+
+    public void setTussenvoegsel(String tussenvoegsel) {
+        this.tussenvoegsel = tussenvoegsel;
+    }
+
+    public String getVoorletters() {
+        return voorletters;
+    }
+
+    public void setVoorletters(String voorletters) {
+        this.voorletters = voorletters;
+    }
+
 
     @Override
     public String toString() {
-        return "Reiziger{" +
-                "reiziger_id=" + reiziger_id +
-                ", voorletters='" + voorletters + '\'' +
-                ", tussenvoegsel='" + tussenvoegsel + '\'' +
-                ", achternaam='" + achternaam + '\'' +
-                ", geboortedatum=" + geboortedatum +
-                ", adres=" + adres +
-                ", ovChipkaartList=" + ovChipkaartList +
-                '}';
+        return "\n"+
+                "Reiziger { #" + reizigerid +
+                ", " + voorletters +
+                ", " + tussenvoegsel +
+                "," + achternaam +
+                ", " + geboortedatum +
+                ", " + adres +
+                ", \n ov's " + ovChipkaarten +
+                " } \n ";
     }
 }

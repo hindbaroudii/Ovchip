@@ -8,174 +8,138 @@ import java.util.List;
 public class ProductDAOPsql implements ProductDAO {
 
     private Connection conn;
-    private OVChipkaartDAOPsql  odao = null;
+    private OVChipkaartDAOPsql odao = null;
 
-    public ProductDAOPsql(Connection conn, OVChipkaartDAOPsql odao) {
-        try {
-            final String url = "jdbc:postgresql://localhost/ovchip";
-            final String user = "postgres";
-            final String password = "zxcv";
-            this.conn = DriverManager.getConnection(url, user, password);
-            System.out.println("Connected to the PostgreSQL server successfully.");
-        }catch (SQLException e){
-            System.out.println(e.getMessage());
-        }
+    public ProductDAOPsql(Connection conn) throws SQLException {
+        this.conn = conn;
         this.odao = new OVChipkaartDAOPsql(conn);
     }
 
     @Override
     public boolean save(Product product) {
-        try{
-            String query = "INSERT INTO product VVALUES (?,?,?,?)";
-            PreparedStatement pst = conn.prepareStatement(query);
-            pst.setInt(1, product.getProductnummer());
-            pst.setString(2, product.getNaam());
-            pst.setString(3, product.getBeschrijving());
-            pst.setDouble(4, product.getPrijs());
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement("INSERT INTO product values(?, ?, ?, ?)");
+            preparedStatement.setInt(1, product.getProduct_nummer());
+            preparedStatement.setString(2, product.getNaam());
+            preparedStatement.setString(3, product.getBeschrijving());
+            preparedStatement.setDouble(4, product.getPrijs());
 
-            pst.execute();
+            preparedStatement.execute();
 
-            // add the relation between the product and ovkaart
-            addRelations(product);
+            PreparedStatement prs = conn.prepareStatement("INSERT INTO ov_chipkaart_product VALUES (?,?,?,?)");
+
+            System.out.println(product.getOvChipkaarten());
+
+            for (OVChipkaart ovChipkaart : product.getOvChipkaarten()) {
+                prs.setInt(1, ovChipkaart.getKaartnummer());
+                prs.setInt(2, product.getProduct_nummer());
+                prs.setString(3, "gekocht");
+                prs.setDate(4, Date.valueOf(LocalDate.now()));
+                prs.execute();
+            }
 
             return true;
-
-        }catch (SQLException sqlException){
-            System.out.println("Error! "+ sqlException.getMessage());
+        } catch (Exception e) {
             return false;
         }
     }
-
-
 
     @Override
     public boolean update(Product product) {
-        try{
-            String query = "UPDATE product SET naam = ? , beschtijving = ? , prijs = ? WHERE product_nummer = ? ";
-            PreparedStatement pst = conn.prepareStatement(query);
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement("UPDATE product SET product_nummer=?, naam=?, beschrijving=? , prijs = ? WHERE product_nummer=? ");
+            preparedStatement.setInt(1, product.getProduct_nummer());
+            preparedStatement.setString(2, product.getNaam());
+            preparedStatement.setString(3, product.getBeschrijving());
+            preparedStatement.setDouble(4, product.getPrijs());
+            preparedStatement.setInt(5, product.getProduct_nummer());
 
-            pst.setString(1 , product.getNaam());
-            pst.setString(2, product.getBeschrijving());
-            pst.setDouble(3, product.getPrijs());
-            pst.setInt(4,product.getProductnummer());
-            pst.execute();
+            preparedStatement.execute();
 
-            // delete and set the relation
-            removeRelations(product);
-            addRelations(product);
+            PreparedStatement prs = conn.prepareStatement("DELETE FROM ov_chipkaart_product WHERE product_nummer = ? ;");
+            prs.setInt(1, product.getProduct_nummer());
+            prs.execute();
+
+            PreparedStatement prs1 = conn.prepareStatement("INSERT INTO ov_chipkaart_product VALUES(?,?,?,?)");
+
+            for (OVChipkaart ovChipkaart : product.getOvChipkaarten()) {
+                prs1.setInt(1, ovChipkaart.getKaartnummer());
+                prs1.setInt(2, product.getProduct_nummer());
+                prs1.setString(3, "sold");
+                prs1.setDate(4, Date.valueOf(LocalDate.now()));
+                prs1.execute();
+            }
 
             return true;
-
-        }catch (SQLException sqlException){
-            System.out.println("ERROR !! "+ sqlException.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
     }
-
 
 
     @Override
     public boolean delete(Product product) {
-        try{
-            //delete the OVproduct from the cards that have this product
-            removeRelations(product);
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement("DELETE FROM ov_chipkaart_product WHERE product_nummer = ? ");
+            preparedStatement.setInt(1, product.getProduct_nummer());
+            preparedStatement.execute();
 
-            // delete the product
-            String query ="DELETE FROM product WHERE product_nummer = ?";
+            PreparedStatement prs = conn.prepareStatement("DELETE FROM product WHERE product_nummer = ?");
+            prs.setInt(1, product.getProduct_nummer());
+            return prs.execute();
 
-            PreparedStatement pst = conn.prepareStatement(query);
-            pst.setInt(1,product.getProductnummer());
-            pst.execute();
-
-            return true;
-        }catch (SQLException sqlException){
-            System.out.println(sqlException.getMessage());
+        } catch (Exception e) {
             return false;
         }
     }
 
     @Override
+    public List<Product> findall() {
+        try {
+            List<Product> products = new ArrayList<>();
+            PreparedStatement preparedStatement = conn.prepareStatement("SELECT * FROM product;");
+            ResultSet rs = preparedStatement.executeQuery();
+
+            while (rs.next()){
+                int productnummer = rs.getInt("product_nummer");
+                String naam = rs.getString("naam");
+                String beschrijving = rs.getString("beschrijving");
+                Double prijs = rs.getDouble("prijs");
+                Product product = new Product(productnummer, naam, beschrijving,prijs);
+
+                products.add(product);
+            }
+            return products;
+
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+
+
     public List<Product> findByOVChipkaart(OVChipkaart ovChipkaart) {
-        List<Product> products = new ArrayList<>();
-        try{
-            String query = "SELECT product.prodcut_nummer, naam, beschrijving, prijs FROM ov_chipkaart_product" +
-                    "JOIN product ON ov_chipkaart_product.product_nummer = product.product_nummer WHERE ov_chipkaart_product.kaart_nummer = ?";
-            PreparedStatement pst = conn.prepareStatement(query);
-            ResultSet rs = pst.executeQuery();
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement("SELECT p.product_nummer, naam, beschrijving, prijs FROM ov_chipkaart_product ocp JOIN product p on ocp.product_nummer = p.product_nummer WHERE ocp.kaart_nummer = ?");
+            preparedStatement.setInt(1, ovChipkaart.getKaartnummer());
+            ResultSet rs = preparedStatement.executeQuery();
 
-            while (rs.next()){
-                int product_nummer = rs.getInt("product_nummer");
-                String product_naam = rs.getString("naam");
-                String product_beschrijving = rs.getString("beschrijving");
+            ArrayList<Product> products = new ArrayList<>();
+
+            while (rs.next()) {
+                int nummer = rs.getInt("product_nummer");
+                String naam = rs.getString("naam");
+                String beschrijving = rs.getString("beschrijving");
                 double prijs = rs.getDouble("prijs");
 
-                Product product = new Product(product_nummer,product_naam,product_beschrijving,prijs);
+                Product product = new Product(nummer, naam, beschrijving, prijs);
+
                 products.add(product);
             }
             return products;
-
-        }catch (SQLException e){
-            System.out.println("Error! "+ e.getMessage());
+        } catch (Exception e) {
             return null;
-        }
-    }
-
-    @Override
-    public List<Product> findAll() {
-        List<Product> products = new ArrayList<>();
-
-        try{
-            String query = "SELECT * FROM product";
-            PreparedStatement pst = conn.prepareStatement(query);
-            ResultSet rs = pst.executeQuery();
-
-            while (rs.next()){
-                int product_nummer = rs.getInt("product_nummer");
-                String product_naam = rs.getString("naam");
-                String product_beschrijving = rs.getString("beschrijving");
-                double prijs = rs.getDouble("prijs");
-
-                Product product = new Product(product_nummer,product_naam,product_beschrijving,prijs);
-                products.add(product);
-            }
-            return products;
-        }catch (SQLException e){
-            System.out.println("Error! "+ e.getMessage());
-            return null;
-        }
-    }
-
-
-    private void removeRelations (Product product){
-        try{
-            String q = "DELETE FROM ov_chipkaart_product WHERE product_nummer = ?";
-            PreparedStatement pst = conn.prepareStatement(q);
-            pst.setInt(1,product.getProductnummer());
-            pst.execute();
-        }catch (SQLException e){
-            e.getMessage();
-        }
-    }
-
-
-    private void addRelations (Product product){
-        try{
-            String ovquery = "INSERT INTO ov_chipkaart_product VALUES(?,?,?,?,)";
-            PreparedStatement pst = conn.prepareStatement(ovquery);
-
-            pst.setInt(2,product.getProductnummer());
-
-            for(OVChipkaart ovChipkaart : product.getOvChipkaarts()){
-
-                pst.setInt(1,ovChipkaart.getKaartnummer());
-                pst.setString(3,"GEKOCHT");
-                pst.setDate(4, Date.valueOf(LocalDate.now()));
-
-                pst.execute();
-            }
-
-        }catch (SQLException e){
-            e.getMessage();
         }
     }
 }

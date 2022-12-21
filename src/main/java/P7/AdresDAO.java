@@ -1,7 +1,5 @@
 package P7;
 
-
-
 import java.util.List;
 
 public interface AdresDAO {

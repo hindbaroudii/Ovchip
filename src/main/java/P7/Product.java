@@ -2,7 +2,6 @@ package P7;
 
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -16,11 +15,7 @@ public class Product {
     private String beschrijving;
     private double prijs;
 
-    @ManyToMany(mappedBy = "productList", targetEntity = OVChipkaart.class)
-    private List<OVChipkaart> ovChipkaartList = new ArrayList<>();
-
-    public Product() {
-    }
+    public Product() {}
 
     public Product(int product_nummer, String naam, String beschrijving, double prijs) {
         this.product_nummer = product_nummer;
@@ -29,11 +24,14 @@ public class Product {
         this.prijs = prijs;
     }
 
-    public int getProduct_nummer() {
+    @ManyToMany(mappedBy = "productList", targetEntity = OVChipkaart.class)
+    private List<OVChipkaart> ovChipList;
+
+    public int getProductNummer() {
         return product_nummer;
     }
 
-    public void setProduct_nummer(int product_nummer) {
+    public void setProductNummer(int product_nummer) {
         this.product_nummer = product_nummer;
     }
 
@@ -61,21 +59,20 @@ public class Product {
         this.prijs = prijs;
     }
 
-    public List<OVChipkaart> getOvChipkaartList() {
-        return ovChipkaartList;
+    public List<OVChipkaart> getOvChipList() {
+        return ovChipList;
     }
 
-    public void setOvChipkaartList(List<OVChipkaart> ovChipkaartList) {
-        this.ovChipkaartList = ovChipkaartList;
+    public void setOvChipList(List<OVChipkaart> ovChipList) {
+        this.ovChipList = ovChipList;
     }
 
-    @Override
     public String toString() {
-        return "Product{" +
-                "product_nummer=" + product_nummer +
-                ", naam='" + naam + '\'' +
-                ", beschrijving='" + beschrijving + '\'' +
-                ", prijs=" + prijs +
-                '}';
+        return "\nProducts { " +
+                product_nummer + ", " +
+                naam + ", " +
+                beschrijving + ", " +
+                prijs + "}";
     }
+
 }

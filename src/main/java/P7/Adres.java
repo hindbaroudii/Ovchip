@@ -8,7 +8,6 @@ public class Adres {
     @Id
     private int adres_id;
 
-    @Column
     private String postcode;
     private String huisnummer;
     private String straat;
@@ -19,39 +18,32 @@ public class Adres {
     @JoinColumn(name = "adres_id")
     private Reiziger reiziger;
 
-    public Adres(){}
+    public Adres() {
+    }
 
-    public Adres(int adres_id, String postcode, String huisnummer, String straat, String woonplaats) {
-        this.adres_id = adres_id;
+    public Adres(int id, String postcode, String huisnummer, String straat, String woonplaats, int reiziger_id) {
+        this.adres_id = id;
         this.postcode = postcode;
         this.huisnummer = huisnummer;
         this.straat = straat;
         this.woonplaats = woonplaats;
+        this.reiziger_id = reiziger_id;
     }
 
-
-    public int getAdres_id() {
-        return adres_id;
+    public Reiziger getReiziger() {
+        return reiziger;
     }
 
-    public void setAdres_id(int adres_id) {
-        this.adres_id = adres_id;
+    public void setReiziger(Reiziger reiziger) {
+        this.reiziger = reiziger;
     }
 
-    public String getPostcode() {
-        return postcode;
+    public int getReiziger_id() {
+        return reiziger_id;
     }
 
-    public void setPostcode(String postcode) {
-        this.postcode = postcode;
-    }
-
-    public String getHuisnummer() {
-        return huisnummer;
-    }
-
-    public void setHuisnummer(String huisnummer) {
-        this.huisnummer = huisnummer;
+    public void setReiziger_id(int reiziger_id) {
+        this.reiziger_id = reiziger_id;
     }
 
     public String getStraat() {
@@ -70,11 +62,38 @@ public class Adres {
         this.woonplaats = woonplaats;
     }
 
+    public String getHuisnummer() {
+        return huisnummer;
+    }
+
+    public void setHuisnummer(String huisnummer) {
+        this.huisnummer = huisnummer;
+    }
+
+    public String getPostcode() {
+        return postcode;
+    }
+
+    public void setPostcode(String postcode) {
+        this.postcode = postcode;
+    }
+
+    public int getAdres_id() {
+        return adres_id;
+    }
+
+    public void setAdres_id(int adres_id) {
+        this.adres_id = adres_id;
+    }
+
     @Override
     public String toString() {
-        return "Adres {" +
-                adres_id +
-                ", " + postcode + "-" + huisnummer + "}";
+        return "\nAdres {" +
+                "id: " + adres_id +
+                ", postcode: '" + postcode + '\'' +
+                ", huisnummer: '" + huisnummer + '\'' +
+                ", straat: '" + straat + '\'' +
+                ", woonplaats: '" + woonplaats + '\'' +
+                "}";
     }
 }
-

@@ -1,5 +1,4 @@
 package P7;
-
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -8,16 +7,12 @@ import org.hibernate.query.Query;
 
 import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.Metamodel;
-import java.sql.Date;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Testklasse - deze klasse test alle andere klassen in deze package.
- * <p>
+ *
  * System.out.println() is alleen in deze klasse toegestaan (behalve voor exceptions).
  *
  * @author tijmen.muller@hu.nl
@@ -46,15 +41,10 @@ public class Main {
     }
 
     public static void main(String[] args) throws SQLException {
-        Session session = getSession();
-        testFetchAll();
-        testDAOHibernate(session);
+        testDAOHibernate();
     }
 
 
-    /**
-     * P6. Haal alle (geannoteerde) entiteiten uit de database.
-     */
     private static void testFetchAll() {
         Session session = getSession();
         try {
@@ -72,33 +62,109 @@ public class Main {
             session.close();
         }
     }
+    public static void testDAOHibernate() {
+        AdresDAOHibernate adao = new AdresDAOHibernate(getSession());
+        ReizigerDAOHibernate rdao = new ReizigerDAOHibernate(getSession());
+        OVChipkaartDAOHibernate odao = new OVChipkaartDAOHibernate(getSession());
+        ProductDAOHibernate pdao = new ProductDAOHibernate(getSession());
 
-    private static void testDAOHibernate(Session session) {
-        AdresDAO adresdao = new AdresDAOHibernate(session);
-        OVChipkaartDAO ovdao = new OVChipkaartDAOHibernate(session);
-        ProductDAO pdao = new ProductDAOHibernate(session);
-        ReizigerDAO rdao = new ReizigerDAOHibernate(session);
+        Reiziger reiziger = new Reiziger(5210, "H", "", "Baroudi", java.sql.Date.valueOf("2003-05-05"));
+        Adres adres = new Adres(115, "7002CR", "138", "Bevrijdingsstraat", "Doetinchem", 50);
+        OVChipkaart ovChipkaart = new OVChipkaart(6543210, java.sql.Date.valueOf("2029-09-10"), 3, 100.0, 50);
+        Product product = new Product(115, "icons", "test test", 10.00);
+
+        System.out.println(" --------  Reizigier DAO  --------\n");
+        System.out.println("-- [TEST] find all -- \n -- All reizigers -- ");
+        System.out.println(rdao.findAll()+"\n");
+
+        System.out.println("-- [TEST] save --");
+        System.out.println(rdao.save(reiziger));
+
+        System.out.println("-- All reiziger na save --");
+        System.out.println(rdao.findAll()+"\n");
+
+        System.out.println("-- [TEST] update -- ");
+        reiziger.setTussenvoegsel("TR");
+        System.out.println(rdao.update(reiziger));
+
+        System.out.println("-------------");
+        System.out.println(rdao.findAll()+"\n");
+
+        System.out.println("-- [TEST] reiziger find by id --");
+
+        System.out.println(rdao.findById(reiziger.getReizigerid())+"\n");
 
 
-        // Reiziger
-        Reiziger reiziger = new Reiziger(1,"H","","Styles",Date.valueOf("1994-02-01"));
-        Adres adres = new Adres(1,"6873LW","79-1","Utrechtstraat","Arnhem");
-        OVChipkaart ov = new OVChipkaart(54321,Date.valueOf("2021-09-08"),2,60.0,1);
-        Product product = new Product(123,"icons product","iconlevel",20.0);
+        System.out.println("\n\n------- Adres DAO -------");
+        System.out.println("-- [TEST] find all \n -- All adressen -- ");
+        System.out.println(adao.findAll()+"\n");
 
-        reiziger.setAdres(adres);
-        ov.getProductList().add(product);
-        reiziger.getOvChipkaartList().add(ov);
+        System.out.println("-- [TEST] save --");
+        adao.save(adres);
 
-        System.out.println("---- Reiziger ----");
+        System.out.println("-- All adressen na save --");
+        System.out.println(adao.findAll()+"\n");
 
-        System.out.println(" -- save -- ");
-        System.out.println("save reiziger :\n" + rdao.save(reiziger));
+        System.out.println("-- [TEST] update -- ");
+        adres.setHuisnummer("79-1");
+        adao.update(adres);
 
-        System.out.println(" -- find all -- ");
-        System.out.println("all reizigers: \n"+ rdao.findAll());
+        System.out.println("-- [TEST] adres find by reiziger --");
+        System.out.println(adao.findByReiziger(reiziger)+"\n");
+
+        System.out.println("-- [TEST] delete --");
+        adao.delete(adres);
+
+        System.out.println("-- All adressen na delete --");
+        System.out.println(adao.findAll());
+
+
+        System.out.println("\n\n------- Product DAO -------");
+        System.out.println("-- [TEST] find all \n -- All products -- ");
+        System.out.println(pdao.findAll());
+
+        System.out.println("-- [TEST] save --");
+        pdao.save(product);
+
+        System.out.println("-- All products na save --");
+        System.out.println(pdao.findAll());
+
+        System.out.println("-- [TEST] update -- ");
+        product.setPrijs(20.00);
+
+        System.out.println("-- All products na update --");
+        System.out.println(pdao.findAll());
+
+
+        System.out.println("\n\n------- OvChipkaart DAO -------");
+        System.out.println("-- [TEST] save --");
+        odao.save(ovChipkaart);
+
+        System.out.println("-- [TEST] find by reiziger --");
+        System.out.println(odao.findByReiziger(reiziger));
+
+
+        System.out.println("-- [TEST] update -- ");
+        ovChipkaart.setSaldo(600.0);
+        odao.update(ovChipkaart);
+
+
+        System.out.println(odao.findByReiziger(reiziger));
 
 
 
+        System.out.println("\n\n----- DELETE TESTS -----");
+
+        System.out.println("-- [TEST] delete ovchipkaart --");
+        odao.delete(ovChipkaart);
+
+        System.out.println("-- [TEST] delete product --");
+        pdao.delete(product);
+        System.out.println(pdao.findAll());
+        System.out.println("---------");
+
+        System.out.println("--- [TEST] delete reiziger ---");
+        rdao.delete(reiziger);
+        System.out.println(rdao.findAll());
     }
 }

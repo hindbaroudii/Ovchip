@@ -7,6 +7,6 @@ public interface ReizigerDAO {
     boolean update(Reiziger reiziger);
     boolean delete(Reiziger reiziger);
     Reiziger findById(int id);
-    List<Reiziger> findByGbDatum(String Datum);
+    List<Reiziger> findByGbDatum(String datum);
     List<Reiziger> findAll();
 }

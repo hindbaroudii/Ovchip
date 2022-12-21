@@ -3,10 +3,9 @@ package P7;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class OVChipkaartDAOHibernate implements OVChipkaartDAO{
+public class OVChipkaartDAOHibernate implements OVChipkaartDAO {
     private Session session;
 
     public OVChipkaartDAOHibernate(Session session) {
@@ -15,62 +14,53 @@ public class OVChipkaartDAOHibernate implements OVChipkaartDAO{
 
     @Override
     public boolean save(OVChipkaart ovChipkaart) {
-        Transaction transaction = this.session.beginTransaction();
-        try{
+        try {
+            Transaction transaction = this.session.beginTransaction();
             session.save(ovChipkaart);
             transaction.commit();
             return true;
-        }catch (Exception e){
-            System.out.println("Error! " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
             return false;
         }
     }
 
     @Override
     public boolean update(OVChipkaart ovChipkaart) {
-        Transaction transaction = this.session.beginTransaction();
-
         try {
-            session.update(ovChipkaart);
+            Transaction transaction = this.session.beginTransaction();
+            session.save(ovChipkaart);
             transaction.commit();
             return true;
-
-        }catch (Exception e){
-            System.out.println("Error! " + e.getMessage());
-            return false;
-        }    }
-
-    @Override
-    public boolean delete(OVChipkaart ovChipkaart) {
-        Transaction transaction = this.session.beginTransaction();
-        try {
-            session.delete(ovChipkaart);
-            transaction.commit();
-            return true;
-        }catch (Exception e){
-            System.out.println("Error! " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
             return false;
         }
     }
+
+    @Override
+    public boolean delete(OVChipkaart ovChipkaart) {
+        try {
+            Transaction transaction = this.session.beginTransaction();
+            session.delete(ovChipkaart);
+            transaction.commit();
+            return true;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+    }
+
 
     @Override
     public List<OVChipkaart> findByReiziger(Reiziger reiziger) {
         try {
-            List<OVChipkaart> ovChipkaartList  = session.createQuery("FROM OVChipkaart WHERE reiziger_id = "+ reiziger.getReiziger_id(), OVChipkaart.class).getResultList();
-            return ovChipkaartList;
-        }catch (Exception e){
-            System.out.println("Error! " + e.getMessage());
-            return null;
-        }
-    }
-
-    @Override
-    public List<OVChipkaart> findAll() {
-        try{
-            List<OVChipkaart> ovChipkaartList = session.createQuery("FROM OVChipkaart ", OVChipkaart.class).getResultList();
-            return ovChipkaartList;
-        }catch (Exception e){
-            System.out.println("Error! " + e.getMessage());
+            Transaction transaction = this.session.beginTransaction();
+            List<OVChipkaart> ovChipkaarten = session.createQuery("FROM ov_chipkaart WHERE reiziger_id = " + reiziger.getReizigerid(), OVChipkaart.class).getResultList();
+            transaction.commit();
+            return ovChipkaarten;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
             return null;
         }
     }

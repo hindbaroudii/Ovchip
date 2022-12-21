@@ -3,11 +3,11 @@ package P7;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class AdresDAOHibernate implements AdresDAO{
-
-    private final Session session;
+public class AdresDAOHibernate implements AdresDAO {
+    private Session session;
 
     public AdresDAOHibernate(Session session) {
         this.session = session;
@@ -15,43 +15,41 @@ public class AdresDAOHibernate implements AdresDAO{
 
     @Override
     public boolean save(Adres adres) {
-        Transaction transaction = this.session.beginTransaction();
-        try{
+        try {
+            Transaction transaction = this.session.beginTransaction();
             session.save(adres);
             transaction.commit();
             return true;
-        }catch (Exception e){
-            System.out.println("Error! " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("ERROR!" + e.getMessage());
             return false;
         }
     }
 
-
     @Override
     public boolean update(Adres adres) {
-        Transaction transaction = this.session.beginTransaction();
-
         try {
+            Transaction transaction = this.session.beginTransaction();
             session.update(adres);
             transaction.commit();
             return true;
 
-        }catch (Exception e){
-            System.out.println("Error! " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("ERROR!" + e.getMessage());
             return false;
         }
     }
 
-
     @Override
     public boolean delete(Adres adres) {
-        Transaction transaction = this.session.beginTransaction();
         try {
+            Transaction transaction = this.session.beginTransaction();
             session.delete(adres);
             transaction.commit();
             return true;
-        }catch (Exception e){
-            System.out.println("Error! " + e.getMessage());
+
+        } catch (Exception e) {
+            System.out.println("ERROR!" + e.getMessage());
             return false;
         }
     }
@@ -59,22 +57,28 @@ public class AdresDAOHibernate implements AdresDAO{
     @Override
     public Adres findByReiziger(Reiziger reiziger) {
         try {
-            Adres adres = session.createQuery("FROM Adres WHERE reiziger_id = "+ reiziger.getReiziger_id(), Adres.class).getSingleResult();
+            Transaction transaction = this.session.beginTransaction();
+            Adres adres = session.createQuery("FROM Adres WHERE reiziger_id = " + reiziger.getReizigerid(), Adres.class).getSingleResult();
+            transaction.commit();
             return adres;
-        }catch (Exception e){
-            System.out.println("Error! " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("ERROR!" + e.getMessage());
             return null;
         }
     }
 
-
     @Override
     public List<Adres> findAll() {
-        try{
-            List<Adres> adresList = session.createQuery("FROM Adres", Adres.class).getResultList();
+        try {
+
+            Transaction transaction = this.session.beginTransaction();
+            List<Adres> adressen = session.createQuery(" FROM Adres", Adres.class).getResultList();
+            List<Adres> adresList = new ArrayList<>(adressen);
+            transaction.commit();
             return adresList;
-        }catch (Exception e){
-            System.out.println("Error! " + e.getMessage());
+
+        } catch (Exception e) {
+            System.out.println("ERROR!" + e.getMessage());
             return null;
         }
     }

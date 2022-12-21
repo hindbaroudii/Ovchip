@@ -1,23 +1,32 @@
 package P5;
-
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
 public class OVChipkaart {
     private int kaartnummer;
-    private Date geldigTot;
+    private Date geldigtot;
     private int klasse;
     private double saldo;
-    private int reiziger_id;
-    private List<Product> productList = new ArrayList<>();
+    private int reizigerid;
 
-    public OVChipkaart(int kaartnummer, Date geldigTot, int klasse, double saldo, int reiziger_id) {
+    private List<Product> products;
+
+    public OVChipkaart(int kaartnummer, Date geldigtot, int klasse, double saldo, int reiziger_id) {
         this.kaartnummer = kaartnummer;
-        this.geldigTot = geldigTot;
+        this.geldigtot = geldigtot;
         this.klasse = klasse;
         this.saldo = saldo;
-        this.reiziger_id = reiziger_id;
+        this.reizigerid = reiziger_id;
+    }
+
+    public OVChipkaart(int kaartnummer, Date geldigtot, int klasse, double saldo, int reizigerid, List<Product> products) {
+        this.kaartnummer = kaartnummer;
+        this.geldigtot = geldigtot;
+        this.klasse = klasse;
+        this.saldo = saldo;
+        this.reizigerid = reizigerid;
+        this.products = products;
     }
 
     public int getKaartnummer() {
@@ -28,12 +37,12 @@ public class OVChipkaart {
         this.kaartnummer = kaartnummer;
     }
 
-    public Date getGeldigTot() {
-        return geldigTot;
+    public Date getGeldigtot() {
+        return geldigtot;
     }
 
-    public void setGeldigTot(Date geldigTot) {
-        this.geldigTot = geldigTot;
+    public void setGeldigtot(Date geldigtot) {
+        this.geldigtot = geldigtot;
     }
 
     public int getKlasse() {
@@ -52,30 +61,30 @@ public class OVChipkaart {
         this.saldo = saldo;
     }
 
-    public int getReiziger_id() {
-        return reiziger_id;
+    public int getReizigerid() {
+        return reizigerid;
     }
 
-    public void setReiziger_id(int reiziger_id) {
-        this.reiziger_id = reiziger_id;
+    public void setReizigerid(int reizigerid) {
+        this.reizigerid = reizigerid;
     }
 
-    public List<Product> getProductList() {
-        return productList;
+    public List<Product> getProducts() {
+        return products;
     }
 
-    public void setProductList(List<Product> productList) {
-        this.productList = productList;
+    public void setProducts(List<Product> products) {
+        this.products = products;
     }
 
     @Override
     public String toString() {
         return "OVChipkaart{" +
                 "kaartnummer=" + kaartnummer +
-                ", geldigTot=" + geldigTot +
+                ", geldigtot=" + geldigtot +
                 ", klasse=" + klasse +
                 ", saldo=" + saldo +
-                ", reiziger_id=" + reiziger_id +
+                ", reizigerid=" + reizigerid +
                 '}';
     }
 }

@@ -1,5 +1,4 @@
 package P5;
-
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,11 +9,8 @@ public class Reiziger {
     private String tussenvoegsel;
     private String achternaam;
     private Date geboortedatum;
-    private Adres ades;
-    private List<OVChipkaart> ovChipkaarts = new ArrayList<>();
-
-    public Reiziger() {
-    }
+    private Adres adres;
+    private List<OVChipkaart> ovChipkaarten = new ArrayList<>();
 
     public Reiziger(int id, String voorletters, String tussenvoegsel, String achternaam, Date geboortedatum) {
         this.id = id;
@@ -64,20 +60,20 @@ public class Reiziger {
         this.geboortedatum = geboortedatum;
     }
 
-    public Adres getAdes() {
-        return ades;
+    public Adres getAdres() {
+        return adres;
     }
 
-    public void setAdes(Adres ades) {
-        this.ades = ades;
+    public void setAdres(Adres adres) {
+        this.adres = adres;
     }
 
-    public List<OVChipkaart> getOvChipkaarts() {
-        return ovChipkaarts;
+    public List<OVChipkaart> getOvChipkaarten() {
+        return ovChipkaarten;
     }
 
-    public void setOvChipkaarts(List<OVChipkaart> ovChipkaarts) {
-        this.ovChipkaarts = ovChipkaarts;
+    public void setOvChipkaarten(List<OVChipkaart> ovChipkaarten) {
+        this.ovChipkaarten = ovChipkaarten;
     }
 
     @Override
@@ -88,7 +84,7 @@ public class Reiziger {
                 ", tussenvoegsel='" + tussenvoegsel + '\'' +
                 ", achternaam='" + achternaam + '\'' +
                 ", geboortedatum=" + geboortedatum +
-                ",adrs = " + ades + '\'' +
+                ", adres=" + adres +
                 '}';
     }
 }

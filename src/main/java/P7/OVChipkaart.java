@@ -3,32 +3,27 @@ package P7;
 
 import javax.persistence.*;
 import java.sql.Date;
-import java.util.ArrayList;
 import java.util.List;
 
-@Entity
+@Entity(name = "ov_chipkaart")
 @Table(name = "ov_chipkaart")
 public class OVChipkaart {
-
     @Id
     private int kaart_nummer;
-
-    @Column
     private Date geldig_tot;
     private int klasse;
     private double saldo;
     private int reiziger_id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "reiziger_id", insertable = false, updatable = false)
     private Reiziger reiziger;
-
 
     @ManyToMany
     @JoinTable(name = "ov_chipkaart_product",
             joinColumns = {@JoinColumn(name = "kaart_nummer")},
             inverseJoinColumns = {@JoinColumn(name = "product_nummer")})
-    private List<Product> productList = new ArrayList<>();
+    public List<Product> productList;
 
     public OVChipkaart() {
     }
@@ -41,20 +36,12 @@ public class OVChipkaart {
         this.reiziger_id = reiziger_id;
     }
 
-    public int getKaart_nummer() {
-        return kaart_nummer;
+    public Reiziger getReiziger() {
+        return reiziger;
     }
 
-    public void setKaart_nummer(int kaart_nummer) {
-        this.kaart_nummer = kaart_nummer;
-    }
-
-    public Date getGeldig_tot() {
-        return geldig_tot;
-    }
-
-    public void setGeldig_tot(Date geldig_tot) {
-        this.geldig_tot = geldig_tot;
+    public void setReiziger(Reiziger reiziger) {
+        this.reiziger = reiziger;
     }
 
     public int getKlasse() {
@@ -65,28 +52,28 @@ public class OVChipkaart {
         this.klasse = klasse;
     }
 
+    public Date getGeldig_tot() {
+        return geldig_tot;
+    }
+
+    public void setGeldig_tot(Date geldig_tot) {
+        this.geldig_tot = geldig_tot;
+    }
+
+    public int getKaart_nummer() {
+        return kaart_nummer;
+    }
+
+    public void setKaart_nummer(int kaart_nummer) {
+        this.kaart_nummer = kaart_nummer;
+    }
+
     public double getSaldo() {
         return saldo;
     }
 
     public void setSaldo(double saldo) {
         this.saldo = saldo;
-    }
-
-    public int getReiziger_id() {
-        return reiziger_id;
-    }
-
-    public void setReiziger_id(int reiziger_id) {
-        this.reiziger_id = reiziger_id;
-    }
-
-    public Reiziger getReiziger() {
-        return reiziger;
-    }
-
-    public void setReiziger(Reiziger reiziger) {
-        this.reiziger = reiziger;
     }
 
     public List<Product> getProductList() {
@@ -97,17 +84,22 @@ public class OVChipkaart {
         this.productList = productList;
     }
 
+    public int getReiziger_id() {
+        return reiziger_id;
+    }
+
+    public void setReiziger_id(int reiziger_id) {
+        this.reiziger_id = reiziger_id;
+    }
+
     @Override
     public String toString() {
-        return "OVChipkaart{" +
-                "kaart_nummer=" + kaart_nummer +
-                ", geldig_tot=" + geldig_tot +
-                ", klasse=" + klasse +
-                ", saldo=" + saldo +
-                ", reiziger_id=" + reiziger_id +
-                ", reiziger=" + reiziger +
-                ", productList=" + productList +
+        return "OVChipkaart {" +
+                "" + kaart_nummer +
+                ", geldigidheid: " + geldig_tot +
+                ", klasse:" + klasse +
+                ", saldo: €" + saldo +
+                "Product {" + productList + "}" +
                 '}';
     }
 }
-

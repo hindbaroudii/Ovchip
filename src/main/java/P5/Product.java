@@ -1,28 +1,37 @@
 package P5;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Product {
-    private int productnummer;
+    private int product_nummer;
     private String naam;
     private String beschrijving;
     private double prijs;
-    private List<OVChipkaart> ovChipkaarts;
+    private List<OVChipkaart> ovChipkaarten;
 
-    public Product(int productnummer, String naam, String beschrijving, double prijs) {
-        this.productnummer = productnummer;
+    public Product(int product_nummer, String naam, String beschrijving, double prijs) {
+        this.product_nummer = product_nummer;
         this.naam = naam;
         this.beschrijving = beschrijving;
         this.prijs = prijs;
-        this.ovChipkaarts = ovChipkaarts;
+        this.ovChipkaarten = new ArrayList<OVChipkaart>();
     }
 
-    public int getProductnummer() {
-        return productnummer;
+    public Product(int product_nummer, String naam, String beschrijving, double prijs, List<OVChipkaart> ovChipkaarten) {
+        this.product_nummer = product_nummer;
+        this.naam = naam;
+        this.beschrijving = beschrijving;
+        this.prijs = prijs;
+        this.ovChipkaarten = ovChipkaarten;
     }
 
-    public void setProductnummer(int productnummer) {
-        this.productnummer = productnummer;
+    public int getProduct_nummer() {
+        return product_nummer;
+    }
+
+    public void setProduct_nummer(int product_nummer) {
+        this.product_nummer = product_nummer;
     }
 
     public String getNaam() {
@@ -49,18 +58,18 @@ public class Product {
         this.prijs = prijs;
     }
 
-    public List<OVChipkaart> getOvChipkaarts() {
-        return ovChipkaarts;
+    public List<OVChipkaart> getOvChipkaarten() {
+        return ovChipkaarten;
     }
 
-    public void setOvChipkaarts(List<OVChipkaart> ovChipkaarts) {
-        this.ovChipkaarts = ovChipkaarts;
+    public void setOvChipkaarten(List<OVChipkaart> ovChipkaarten) {
+        this.ovChipkaarten = ovChipkaarten;
     }
 
     @Override
     public String toString() {
-        return "Product {" +
-                "productnummer=" + productnummer +
+        return "Product{" +
+                "product_nummer=" + product_nummer +
                 ", naam='" + naam + '\'' +
                 ", beschrijving='" + beschrijving + '\'' +
                 ", prijs=" + prijs +
