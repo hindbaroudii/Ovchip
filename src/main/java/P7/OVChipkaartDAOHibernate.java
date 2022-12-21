@@ -1,5 +1,4 @@
 package P7;
-
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -61,7 +60,7 @@ public class OVChipkaartDAOHibernate implements OVChipkaartDAO {
             return ovChipkaarten;
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return null;
+            throw (e);
         }
     }
 }

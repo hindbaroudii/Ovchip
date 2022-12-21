@@ -85,7 +85,7 @@ public class ReizigerDAOHibernate implements ReizigerDAO {
             return reizigers;
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return null;
+            throw (e);
         }
     }
 }

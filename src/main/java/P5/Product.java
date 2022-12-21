@@ -62,6 +62,12 @@ public class Product {
         return ovChipkaarten;
     }
 
+    public void addOv(OVChipkaart ovChipkaart) {
+        this.ovChipkaarten.add(ovChipkaart);
+        ovChipkaart.getProducts().add(this);
+    }
+
+
     public void setOvChipkaarten(List<OVChipkaart> ovChipkaarten) {
         this.ovChipkaarten = ovChipkaarten;
     }

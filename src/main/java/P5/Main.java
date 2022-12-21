@@ -46,6 +46,9 @@ public class Main {
         odao.save(ovChipkaart);
         odao.save(ovkaart);
 
+
+        ovkaart.getProducts().add(product);
+
         product.getOvChipkaarten().add(ovChipkaart);
         product.getOvChipkaarten().add(ovkaart);
 

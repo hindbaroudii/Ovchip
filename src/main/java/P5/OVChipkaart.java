@@ -85,6 +85,7 @@ public class OVChipkaart {
                 ", klasse=" + klasse +
                 ", saldo=" + saldo +
                 ", reizigerid=" + reizigerid +
+                "producten=" + getProducts() +
                 '}';
     }
 }

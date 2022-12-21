@@ -69,7 +69,7 @@ public class Main {
         ProductDAOHibernate pdao = new ProductDAOHibernate(getSession());
 
         Reiziger reiziger = new Reiziger(5210, "H", "", "Baroudi", java.sql.Date.valueOf("2003-05-05"));
-        Adres adres = new Adres(115, "7002CR", "138", "Bevrijdingsstraat", "Doetinchem", 50);
+        Adres adres = new Adres(1315, "7002CR", "138", "Bevrijdingsstraat", "Doetinchem", 50);
         OVChipkaart ovChipkaart = new OVChipkaart(6543210, java.sql.Date.valueOf("2029-09-10"), 3, 100.0, 50);
         Product product = new Product(115, "icons", "test test", 10.00);
 

@@ -81,7 +81,7 @@ public class ProductDAOHibernate implements ProductDAO {
             return producten;
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return null;
+            throw (e);
         }
     }
 }
